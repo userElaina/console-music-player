@@ -1,5 +1,7 @@
 # console-music-player
 
+播放器的实现为命令行调用**ffplay**,故支持的格式非常多(ffmpeg yyds!:)
+
 Done:
 
 以三种形式播放(单曲,随机,顺序)
