@@ -1,6 +1,8 @@
 # console-music-player
 
 播放器的实现为命令行调用**ffplay**,故支持的格式非常多(ffmpeg yyds!:)
+![image](https://user-images.githubusercontent.com/80948381/122000181-fd3e0280-cde0-11eb-8a7b-4173f2871dce.png)
+
 
 ## Done
 
@@ -23,6 +25,8 @@ FileAbsPath+`+` 下一次播放指定文件
 帮助文档
 
 模式切换
+
+输入指令的地方前边加 `>>>`
 
 暂停(再开始时这首歌会从头开始)
 
