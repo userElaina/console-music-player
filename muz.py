@@ -329,11 +329,11 @@ d_order={
 for i in d_order:
 	d_order[i].append(i)
 
-def f_order(x:str,dft:str='ERROR')->str:
+def f_order(x:str)->str:
 	for i in d_order:
 		if x in d_order[i]:
 			return i
-	return dft
+	return str(x)
 
 'DEBUG INFO WARNING ERROR CRITICAL'
 
@@ -448,11 +448,14 @@ class nMuz:
 			a=input()
 			self.lg(a,'DEBUG')
 			taskkill='+' not in a
-			a=a.strip().replace('+','').split(' ',1)+['',]
+			_a=a.strip()
+			a=_a.replace('+','').split(' ',1)+['',]
 			a2=a[1].strip()
 			a=a[0]
 			a=f_order(a)
-			if a=='r':
+			if _a=='':
+				self.pt()
+			elif a=='r':
 				if self.__mode=='lp':
 					self.__nwn+=1
 				self.pt()
@@ -536,7 +539,20 @@ class nMuz:
 				self.__l+=_l
 				self.pt('add '+str(len(_l))+' music')
 			else:
-				self.pt('No this order!')
+				_flg=True
+				if os.path.exists(_a):
+					if os.path.isfile(_a):
+						_flg=False
+						self.__q.append(os.path.abspath(_a))
+				_a=os.path.join(self.__ls.get_pth(),_a)
+				if os.path.exists(_a):
+					if os.path.isfile(_a):
+						_flg=False
+						self.__q.append(os.path.abspath(_a))
+				if _flg:
+					self.pt('OrderNotFoundError: '+a)
+				else:
+					self.pt('append 1 music')
 
 			if a in list('rlpm')+['exit','re']:
 				if taskkill:
