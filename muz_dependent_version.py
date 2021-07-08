@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import time
 import random
 
@@ -100,8 +101,7 @@ class nMuz:
 		pth=self.__get1()
 		self.__his.append(pth)
 		self.pt('\033[36m'+pth+'\033[0m')
-		# od='ffplay -nodisp -autoexit -hide_banner -loglevel quiet "'+pth+'" > 1.txt'
-		od='ffplay -nodisp -autoexit -hide_banner -loglevel warning "'+pth+'" > "'+self.__warnpth+'"'
+		od='ffplay -nodisp -autoexit -hide_banner -loglevel quiet "'+pth+'" > "'+self.__warnpth+'"'
 		self.lg(od,'WARNING')
 		open(self.__warnpth,'wb')
 		os.system(od)
@@ -151,6 +151,7 @@ class nMuz:
 	def __up_l(self):
 		self.__l=self.__ls.get_clip(0,9999,'ans_full')
 
+
 	def join(self):
 		_s=lambda x:str(x)+(' '*(3-len(str(x))))
 		self.pt('console-music-player muz start!')
@@ -190,9 +191,11 @@ class nMuz:
 					self.__mode=_a3
 					self.__up_l()
 				self.pt()
+				
 			elif a=='exit':
 				self.pt('exit!')
-				exit()
+				self.__kill()
+				sys.exit()
 
 			elif a=='ll':
 				if 'all' in a2:
@@ -267,7 +270,7 @@ class nMuz:
 				else:
 					self.pt('append 1 music')
 
-			if a in list('rlpm')+['exit','re']:
+			if a in list('rlpm')+['re',]:
 				if taskkill:
 					self.__kill()
 
