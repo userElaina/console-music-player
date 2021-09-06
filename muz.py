@@ -309,7 +309,7 @@ def f_mode(x:str,dft:str='rd')->str:
 			return i
 	return dft
 
-d_order={
+d_command={
 	'l':['left'],
 	're':['repeat'],
 	'r':['right'],
@@ -326,12 +326,12 @@ d_order={
 	'rm':['del','delete','remove'],
 	'add':['append'],
 }
-for i in d_order:
-	d_order[i].append(i)
+for i in d_command:
+	d_command[i].append(i)
 
-def f_order(x:str)->str:
-	for i in d_order:
-		if x in d_order[i]:
+def f_command(x:str)->str:
+	for i in d_command:
+		if x in d_command[i]:
 			return i
 	return str(x)
 
@@ -450,11 +450,14 @@ class nMuz:
 			_a=a.strip()
 			a=_a.replace('+','').split(' ',1)+['',]
 			a2=a[1].strip()
-			a=a[0]
-			a=f_order(a)
+			a=a[0].lower()
+			a=f_command(a)
 
 			if _a=='':
 				self.pt()
+
+			elif a=='qwq':
+				self.pt('QwQ')
 
 			elif a=='w':
 				self.pt(self.__mode+' '+str(len(self.__his)))
@@ -539,7 +542,7 @@ class nMuz:
 				self.pt()
 
 			elif a=='exit':
-				self.pt('exit!')
+				# self.pt('exit!')
 				self.__kill()
 				sys.exit()
 
@@ -555,7 +558,7 @@ class nMuz:
 						_flg=False
 						self.__q.append(os.path.abspath(_a))
 				if _flg:
-					self.pt('OrderNotFoundError: '+a)
+					self.pt('MuzCommandNotFound: '+a)
 				else:
 					self.pt('append 1 music')
 
