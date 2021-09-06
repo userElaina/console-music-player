@@ -8,7 +8,6 @@ import logging
 import threading
 
 
-
 '''
 _th
 '''
@@ -294,6 +293,8 @@ class Log:
 muz
 '''
 
+__denug=True
+
 d_mode={
 	'rd':['ra','random'],
 	'cy':['cycle'],
@@ -309,19 +310,17 @@ def f_mode(x:str,dft:str='rd')->str:
 	return dft
 
 d_order={
-	'r':['right'],
 	'l':['left'],
-	're':[],
+	're':['repeat'],
+	'r':['right'],
 	'up':['u','update'],
 	
 	'p':['pause'],
 	'm':['mode'],
-	'exit':[],
 
 	'll':['ls'],
-	'cd':[],
-	'list':['lst'],
-	'i':['info'],
+	'lst':['list'],
+	'w':['info','i'],
 	'his':['history'],
 
 	'rm':['del','delete','remove'],
@@ -379,7 +378,7 @@ class nMuz:
 			print('\r'+s)
 		else:
 			s='None...'
-		print('\r\033[32m'+self.__ls.get_pth()+'#\033[0m ',end='')
+		print('\r\033[32mMUZ '+self.__ls.get_pth()+'#\033[0m ',end='')
 		self.lg(s,'INFO')
 
 	def __play(self):
@@ -447,23 +446,50 @@ class nMuz:
 		while True:
 			a=input()
 			self.lg(a,'DEBUG')
-			taskkill='+' not in a
+			taskkill='+' in a
 			_a=a.strip()
 			a=_a.replace('+','').split(' ',1)+['',]
 			a2=a[1].strip()
 			a=a[0]
 			a=f_order(a)
+
 			if _a=='':
 				self.pt()
-			elif a=='r':
-				if self.__mode=='lp':
-					self.__nwn+=1
+
+			elif a=='w':
+				self.pt(self.__mode+' '+str(len(self.__his)))
+			elif a=='his':
+				self.pt('history('+str(len(self.__his))+'):')
+				_rn=0
+				for i in self.__his:
+					self.pt(_s(_rn)+(' \033[34m' if i==self.__his[-1] else ' \033[33m')+i+'\033[0m')
+					_rn+=1
+			elif a=='lst':
+				_rn=0
+				self.pt('list('+str(len(self.__l))+'):')
+				for i in self.__l:
+					self.pt(_s(_rn)+(' \033[34m' if i==self.__his[-1] else ' \033[33m')+i+'\033[0m')
+					_rn+=1
+			elif a=='ll' or a=='ls' or a=='la':
+				if a=='la' or 'all' in a2:
+					self.__ls.show(fullpath='full' in a2,no=True)
+				elif a2=='dir':
+					self.__ls.showdir(fullpath='full' in a2,no=True)
+				elif a2=='file':
+					self.__ls.showfile(fullpath='full' in a2,no=True)
+				else:
+					self.__ls.showfile(fullpath='full' in a2,no=True,onlyans=True,name='music')
 				self.pt()
+
 			elif a=='l':
 				self.__q=self.__his[-2:999]+self.__q
 				self.pt()
 			elif a=='re':
 				self.__q=self.__his[-1:999]+self.__q
+				self.pt()
+			elif a=='r':
+				if self.__mode=='lp':
+					self.__nwn+=1
 				self.pt()
 			elif a=='up':
 				self.__up_l()
@@ -477,43 +503,6 @@ class nMuz:
 					self.__mode=_a3
 					self.__up_l()
 				self.pt()
-				
-			elif a=='exit':
-				self.pt('exit!')
-				self.__kill()
-				sys.exit()
-
-			elif a=='ll':
-				if 'all' in a2:
-					self.__ls.show(fullpath='full' in a2,no=True)
-				elif a2=='dir':
-					self.__ls.showdir(fullpath='full' in a2,no=True)
-				elif a2=='file':
-					self.__ls.showfile(fullpath='full' in a2,no=True)
-				else:
-					self.__ls.showfile(fullpath='full' in a2,no=True,onlyans=True,name='music')
-				self.pt()
-			elif a=='cd':
-				try:
-					_a3=int(a2)
-				except:
-					_a3=a2
-				self.__ls.cd(_a3)
-				self.pt()
-			elif a=='list':
-				_rn=0
-				self.pt('list('+str(len(self.__l))+'):')
-				for i in self.__l:
-					self.pt(_s(_rn)+(' \033[34m' if i==self.__his[-1] else ' \033[33m')+i+'\033[0m')
-					_rn+=1
-			elif a=='his':
-				self.pt('history('+str(len(self.__his))+'):')
-				_rn=0
-				for i in self.__his:
-					self.pt(_s(_rn)+(' \033[34m' if i==self.__his[-1] else ' \033[33m')+i+'\033[0m')
-					_rn+=1
-			elif a=='i':
-				self.pt(self.__mode+' '+str(len(self.__his)))
 
 			elif a=='rm':
 				a2=a2.replace(':',' ')
@@ -540,6 +529,20 @@ class nMuz:
 				_l=[i for i in self.__ls.get_clip(l,r,'ans_full') if i not in self.__l]
 				self.__l+=_l
 				self.pt('add '+str(len(_l))+' music')
+
+			elif a=='cd':
+				try:
+					_a3=int(a2)
+				except:
+					_a3=a2
+				self.__ls.cd(_a3)
+				self.pt()
+
+			elif a=='exit':
+				self.pt('exit!')
+				self.__kill()
+				sys.exit()
+
 			else:
 				_flg=True
 				if os.path.exists(_a):
@@ -556,10 +559,7 @@ class nMuz:
 				else:
 					self.pt('append 1 music')
 
-			if a in list('rlpm')+['re',]:
-				if taskkill:
-					self.__kill()
-
+			if taskkill:
+				self.__kill()
 
 nMuz().join()
-
