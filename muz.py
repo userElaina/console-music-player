@@ -2,306 +2,21 @@ import os
 import re
 import sys
 import time
-import copy
 import random
 import logging
-import threading
 
-
-'''
-_th
-'''
-
-def throws(f,args:tuple=tuple())->None:
-	if not f:
-		f=args
-
-	if isinstance(f,(list,tuple)):
-		if len(f)==1:
-			args=tuple()
-		elif len(f)==2:
-			args=f[1]
-		else:
-			args=f[1:]
-		f=f[0]
-
-	if not isinstance(args,tuple):
-		args=(args,)
-		
-	_t=threading.Thread(target=f,args=args,daemon=True)
-	_t.start()
-	return _t
-
-
-'''
-_pth
-'''
-
-exts={
-	'':[''],
-	'qwq':['qwq','qwq1','qwq2','qwq3','qwq4','bmp'],
-	'pic':['png','jpg','jpeg','gif','bmp','tif','tiff'],
-	'tar':['rar','zip','7z','tar','gz','xz','z','bz2'],
-	'music':['mp3','wav','flac'],
-	'movie':['mp4','mkv','mov','ts'],
-	'office':['csv','doc','docx','ppt','pptx','xls','xlsx','pdf'],
-	'danger':['vbs','sh','cmd','exe'],
-	'html':['html'],
-	'txt':['txt','in','out','log'],
-	'data':['xml','json','svg','csv','md','rst'],
-	'c':['c','cpp','h','hpp'],
-	'java':['java'],
-	'py':['pyi','py'],
-	'othercodes':['cs','go','js','lua','pas','php','r','rb','swift','ts','vb','sh','vbs'],
-}
-exts['muz']=exts['music']
-exts['vid']=exts['movie']
-exts['cpp']=exts['c']
-exts['python']=exts['py']
-exts['codes']=exts['c']+exts['java']+exts['py']+exts['othercodes']+exts['data']
-exts['text']=exts['codes']+exts['txt']+exts['html']
-
-colors={
-	'default':'\033[0m',
-	'red':'\033[31m',
-	'green':'\033[32m',
-	'yellow':'\033[33m',
-	'blue':'\033[34m',
-	'purple':'\033[35m',
-	'cyan':'\033[36m',
-}
-
-color_name={
-	'dft':'default',
-	'rd':'red',
-	'yl':'yellow',
-	'pp':'purple',
-	'ppl':'purple'
-}
-
-for i in colors:
-	color_name[i]=i
-	color_name[i[0]]=i
-	color_name[i[:2]]=i
-
-
-class Pth:
-	def __init__(
-		self,
-		old:str='.old',
-	):
-		self.old=old
-
-	def ck(
-		self,
-		pth:str,
-		l:int=5,
-	)->str:
-		pth=os.path.abspath(pth)
-		if not os.path.exists(pth):
-			return
-		i=1
-		pth2=pth+'.'+str(i).zfill(l)+self.old
-		while os.path.exists(pth2):
-			i+=1
-			pth2=pth+'.'+str(i).zfill(l)+self.old
-		os.rename(pth,pth2)
-		return pth2
-
-def get_ext(s:str)->str:
-	_base=os.path.basename(s)
-	return _base.rsplit('.',1)[-1].lower() if '.' in _base else ''
-_s=lambda x:str(x)+(' '*(3-len(str(x))))
-
-class Ls:
-	def __init__(
-		self,
-		pth:str='./',
-		l:list=list(),
-	):
-		self.__pth=os.path.abspath('./')
-		self.cd(pth)
-		self.__col=dict()
-		self.__cols={'red','green','yellow','blue','purple','cyan'}
-
-		for i in l:
-			if isinstance(i,str):
-				self.paint(i)
-			else:
-				self.paint(i[0],i[1])
-
-	def __get_col(self)->str:
-		ans=random.choice(list(self.__cols))
-		if len(self.__cols)>1:
-			self.__cols.discard(ans)
-		return ans
-
-	def cd(self,pth:str):
-		if isinstance(pth,int):
-			pth=self.get_clip(pth+2)
-		_ans=os.path.abspath(os.path.join(self.__pth,pth))
-		self.__pth=_ans if os.path.isdir(_ans) else os.path.dirname(_ans)
-		self.__d=['.','..',]
-		self.__f=list()
-		self.__ext=list()
-		for i in os.listdir(self.__pth):
-			_full=os.path.join(self.__pth,i)
-			if os.path.isdir(_full):
-				self.__d.append(i)
-			elif os.path.isfile(_full):
-				self.__f.append(i)
-		self.__up_flg=True
-
-	def paint(self,x:str,y:str=None)->bool:
-		if x not in exts:
-			return False
-		y=color_name[y] if y in color_name else self.__get_col()
-		_d={i:y for i in exts[x]}
-		self.__col.update(_d)
-		self.__up_flg=True
-		return True
-
-	def get_pth(self)->str:
-		return self.__pth
-
-	def up(self)->dict:
-		if not self.__up_flg:
-			return copy.deepcopy(self.__d)
-		_col=[self.__col.get(get_ext(i),'default') for i in self.__f]
-		_ans=[i for i in self.__f if self.__col.get(get_ext(i),'default')!='default']
-		self.__d={
-			'pth':self.__pth,
-			'dir':self.__d,
-			'file':self.__f,
-			'ans':_ans,
-			'dir_full':[os.path.join(self.__pth,i) for i in self.__d],
-			'file_full':[os.path.join(self.__pth,i) for i in self.__f],
-			'ans_full':[os.path.join(self.__pth,i) for i in _ans],
-			'file_color':_col,
-			'ans_color':[i for i in _col if i!='default'],
-			'len_dir':len(self.__d)-2,
-			'len_file':len(self.__f),
-			'len_ans':len(_ans),
-		}
-		self.__up_flg=False
-		return copy.deepcopy(self.__d)
-
-	def get_clip(self,l:int,r:int=None,k:str='dir')->list:
-		_d=self.up()
-		if k not in {'dir','file','ans','dir_full','file_full','ans_full'}:
-			return list()
-		return _d[k][l:r] if r else _d[k][l]
-
-	def showdir(self,fullpath:bool=False,no:bool=False):
-		_d=self.up()
-		print('dir('+str(_d['len_dir'])+'):')
-		_dir=_d['dir_full' if fullpath else 'dir']
-		for i in range(_d['len_dir']+2):
-			if no:
-				print(_s(i-2),end=' ')
-			print(os.path.join(_dir[i],''))
-		
-	def showfile(self,fullpath:bool=False,no:bool=False,onlyans:bool=False,name:str='file'):
-		_d=self.up()
-		_hd='ans' if onlyans else 'file'
-		_file=_d[_hd+('_full' if fullpath else '')]
-		print(colors['default']+name+'('+str(_d['len_ans'])+'/'+str(_d['len_file'])+'):')
-		for i in range(_d['len_'+_hd]):
-			if no:
-				print(_s(i),end=' ')
-			print(colors[_d[_hd+'_color'][i]]+_file[i]+'\n'+colors['default'],end='')
-
-	def show(self,fullpath:bool=False,no:bool=False):
-		print(colors['default'])
-		print(colors['green']+self.get_pth()+'# '+colors['default'])
-		print(colors['default'])
-		self.showdir(fullpath,no)
-		print(colors['default'])
-		self.showfile(fullpath,no)
-		print(colors['default'])
-
-
-'''
-_log
-'''
-
-class Log:
-	def __init__(
-		self,
-		pth:str='py.log',
-		erpth:str=None,
-	):
-		bg=list()
-
-		
-		self.__pth=os.path.abspath(pth)
-		s=Pth('.log').ck(self.__pth)
-		open(self.__pth,'wb')
-		if s:
-			bg.append(self.__pth+' already exists, and then it is moved '+s)
-
-		if erpth:
-			self.__err=os.path.abspath(erpth)
-			s=Pth('.log').ck(self.__err)
-			open(self.__err,'wb')
-			if s:
-				bg.append(self.__err+' already exists, and then it is moved '+s)
-
-		bg.append('Log start!')
-		
-		'DEBUG INFO WARNING ERROR CRITICAL'
-		self.__logger=logging.getLogger('Log')
-		self.__logger.setLevel(logging.DEBUG)
-		formatter=logging.Formatter("%(asctime)s %(message)s")
-
-		handler_lg=logging.FileHandler(filename=self.__pth,encoding='utf-8')
-		handler_lg.setLevel(logging.DEBUG)
-		handler_lg.setFormatter(formatter)
-		self.__logger.addHandler(handler_lg)
-
-		handler_pt=logging.StreamHandler()
-		handler_pt.setLevel(logging.INFO)
-		handler_pt.setFormatter(logging.Formatter("%(message)s"))
-		self.__logger.addHandler(handler_pt)
-
-		if erpth:
-			handler_er=logging.FileHandler(filename=self.__err,encoding='utf-8')
-			handler_er.setLevel(logging.ERROR)
-			handler_er.setFormatter(formatter)
-			self.__logger.addHandler(handler_er)
-
-		# for i in bg:
-		# 	self.er(i)
-
-	def lg(self,s:str):
-		s=str(s)
-		self.__logger.debug(s)
-
-	def pt(self,s:str):
-		s=str(s)
-		self.__logger.info(s)
-
-	def er(self,s:str):
-		s=str(s)
-		self.__logger.error(s)
-
-	def ptr(self,s:str):
-		pt(repr(s))
-
-
-'''
-muz
-'''
+from userelaina.th import throws
+from userelaina.pthc import Ls,Archive
 
 __denug=True
 
 d_mode={
-	'rd':['ra','random'],
-	'cy':['cycle'],
-	'lp':['loop','lo'],
+	'random':['rd'],
+	'cycle':[],
+	'loop':['lp'],
 }
 for i in d_mode:
-	d_mode[i].append(i)
+	d_mode[i]+=[i,i[0],i[:2]]
 
 def f_mode(x:str,dft:str='rd')->str:
 	for i in d_mode:
@@ -310,66 +25,100 @@ def f_mode(x:str,dft:str='rd')->str:
 	return dft
 
 d_command={
-	'l':['left'],
-	're':['repeat'],
-	'r':['right'],
-	'up':['u','update'],
-	
-	'p':['pause'],
-	'm':['mode'],
-
-	'll':['ls'],
-	'lst':['list'],
+	'pwd':[],
 	'w':['info','i'],
+	'clear':['cls'],
+
+	'ls':['ll'],
+	'la':['dir','lla'],
+	'lst':['list'],
 	'his':['history'],
+
+	'cd':[],
+
+	'l':['left'],
+	're':[],
+	'r':['right'],
+	'u':['up','update'],
+	'm':['mode'],
 
 	'rm':['del','delete','remove'],
 	'add':['append'],
+
+	'p':['pause'],
+	'exit':[],
+
 }
 for i in d_command:
 	d_command[i].append(i)
 
-def f_command(x:str)->str:
+def _splitcmd(x:str)->tuple:
+	x=x.replace('+','').strip().split(' ',1)+['',]
+	x1=x[0].strip().lower()
+	x2=x[1].strip()
 	for i in d_command:
-		if x in d_command[i]:
-			return i
-	return str(x)
+		if x1 in d_command[i]:
+			return (i,x2)
+	return (x1,x2)
 
-'DEBUG INFO WARNING ERROR CRITICAL'
+def _splitlr(x:str)->tuple:
+	if not x:
+		return (0,_max)
+	x=x.replace(' ',':')
+	if ':' in x:
+		l,r=x.split(':')
+		l=int(l) if l else 0
+		r=int(r) if r else _max
+	else:
+		l=int(x)
+		r=l+1
+	return (l,r)
+
+_max=1<<10
+_badpth='\\/:*?"<>|'
+# DEBUG INFO WARNING ERROR CRITICAL
 
 class nMuz:
 	def __init__(
 		self,
-		clk:float=1,
 		mode:str='rd',
 		color:str='y',
 	):
 		_dir=os.path.join(os.path.dirname(os.path.abspath(__file__)),'logs')
-		if not os.path.exists(_dir):
-			os.mkdir(_dir)
-		self.__logpth=os.path.join(_dir,'muz.log')
-		self.__regpth=os.path.join(_dir,'muz-register.txt')
-		self.__errpth=os.path.join(_dir,'muz-errs.txt')
-		self.__warnpth=os.path.join(_dir,'muz-warn.txt')
-		self.__log=Log(self.__logpth)
+		_log=os.path.join(_dir,'muz.log')
+		Archive().new(_log)
+		
+		self.__log=logging.getLogger('muz')
+		self.__log.setLevel(logging.DEBUG)
+		handler_lg=logging.FileHandler(filename=_log,encoding='utf8')
+		handler_lg.setLevel(logging.DEBUG)
+		handler_lg.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+		self.__log.addHandler(handler_lg)
 
-		self.__clk=clk
+		self.__clk=1
+
 		self.__mode=f_mode(mode)
 
 		self.__ls=Ls()
-		self.__ls.paint('muz',color)
+		self.__ls.setcolor('muz',color)
 
-		self.__q=list()
-		self.__nwn=-1
+		self.__q=list() # wait list
+		self.__n=-1 # No. __n music in __l is Playing
+		self.__his=[_badpth,]
 
-		self.__his=list()
 		self.__pause=False
-		self.__ed=False
+
+	def sh(self,s:str):
+		self.__log.warning(s)
+		s='('+s+') 1>nul 2>nul'
+		os.system(s)
 
 	def lg(self,s:str,hd:str='log',):
+		self.__log.debug(s)
+
 		hd=str(hd)
 		hd+=' '*(8-len(hd))
-		s=re.sub('[\r]*\033\\[[0-9]+m','',str(s))
+		s=re.sub('[\r]*\x1b\\[[0-9]+m','',str(s))
 		self.__log.lg(hd+str(s))
 
 	def pt(self,s:str=None):
@@ -378,191 +127,233 @@ class nMuz:
 			print('\r'+s)
 		else:
 			s='None...'
-		print('\r\033[32mMUZ '+self.__ls.get_pth()+'#\033[0m ',end='')
-		self.lg(s,'INFO')
+		self.__log.info(s)
+		print('\r\x1b[32m'+self.__ls.pwd()+'#\x1b[0m ',end='')
 
 	def __play(self):
-		while not len(self.__l):
-			time.sleep(self.__clk)
 		pth=self.__get1()
 		self.__his.append(pth)
-		self.pt('\033[36m'+pth+'\033[0m')
-		od='ffplay -nodisp -autoexit -hide_banner -loglevel quiet "'+pth+'" > "'+self.__warnpth+'"'
-		self.lg(od,'WARNING')
-		open(self.__warnpth,'wb')
-		os.system(od)
-		s=open(self.__warnpth,'r').read().strip()
-		if len(s):
-			self.lg(s,'ERROR')
+		if _badpth in self.__his:
+			self.__his.remove(_badpth)
+		self.pt('\x1b[36m'+pth+'\x1b[0m')
+		od='ffplay -nodisp -autoexit -hide_banner -loglevel quiet "'+pth+'"'
+		self.sh(od)
 
 	def __kill(self):
-		od='taskkill -f -im ffplay.exe 2>"'+self.__errpth+'" > "'+self.__regpth+'"'
-		self.lg(od,'WARNING')
-		open(self.__regpth,'wb')
-		open(self.__errpth,'wb')
-		os.system(od)
-		s=open(self.__regpth,'r').read().strip()
-		if len(s):
-			self.lg(s,'ERROR')
-		s=open(self.__errpth,'r').read().strip()
-		if len(s):
-			self.lg(s,'ERROR')
+		od='taskkill -f -im ffplay.exe'
+		self.sh(od)
 
 	def __always(self):
 		while True:
 			time.sleep(self.__clk)
-
-			if not len(self.__l):
+			if not self.__ls.lencho():
 				continue
-
 			if self.__pause:
 				continue
 
 			if not self.__t.is_alive():
-				if self.__ed:
-					exit()
 				self.__t=throws(self.__play)
 
-	def __get1(self)->str:
-		if len(self.__q):
-			return self.__q.pop(0)
-		if self.__mode=='rd':
-			self.__nwn=random.randint(0,len(self.__l)-1)
-		elif self.__mode=='cy':
-			self.__nwn=(self.__nwn+1)%len(self.__l)
-		else:
-			self.__nwn%=len(self.__l)
-		return self.__l[self.__nwn]
 
-	def __up_l(self):
-		self.__l=self.__ls.get_clip(0,9999,'ans_full')
+	def __get1(self)->str:
+		if self.__q:
+			return self.__q.pop(0)
+
+		while not self.__ls.lencho():
+			time.sleep(self.__clk)
+		if self.__mode=='random':
+			self.__n=random.randint(0,self.__ls.lencho()-1)
+		elif self.__mode=='cycle':
+			self.__n=(self.__n+1)%self.__ls.lencho()
+		else:
+			self.__n%=self.__ls.lencho()
+		return self.__ls.getcho(self.__n)
+
+
+	def cmd_qwq(self,s:str):
+		if s=='qwq':
+			s='QwQ'
+		elif s=='owo':
+			s='OwO'
+		elif s=='qaq':
+			s='QAQ'
+		elif s=='quq':
+			s='QuQ'
+		elif s=='qvq':
+			s='QvQ'
+		elif s=='tat':
+			s='TAT'
+		elif s=='0w0':
+			s='0w0'
+		else:
+			s='QωQ'
+		self.pt(s)
+
+	def cmd_pwd(self):
+		self.pt(self.__ls.pwd())
+
+	def cmd_w(self):
+		s=self.__mode+' '
+		s+='0' if _badpth in self.__his else str(len(self.__his))
+		s+=' paused' if self.__pause else ' playing'
+		self.pt(s)
+		if _badpth not in self.__his:
+			self.pt('\x1b[36m'+self.__his[-1]+'\x1b[0m')
+		
+
+	def cmd_clear(self):
+		self.sh('cls')
+
+	def cmd_ls(self,k:str='ans',fullpath:bool=False):
+		if k=='all':
+			self.__ls.show(fullpath=fullpath)
+			self.pt()
+			return
+		if k=='history':
+			self.__ls.fxxkreg(list() if _badpth in self.__his else self.__his,'history')
+		s=self.__ls.showreg(k=k,fullpath=fullpath).replace('\x1b[33m'+self.__his[-1],'\x1b[36m'+self.__his[-1])
+		print(s,end='')
+		self.pt()
+
+	def cmd_cd(self,s:str):
+		self.__ls.cd(s)
+		self.pt()
+
+	def cmd_l(self):
+		self.__q=self.__his[-2:999]+self.__q
+		self.pt()
+
+	def cmd_re(self):
+		self.__q=self.__his[-1:999]+self.__q
+		self.pt()
+
+	def cmd_r(self):
+		if self.__mode=='lp':
+			self.__n+=1
+		self.pt()
+
+	def cmd_u(self):
+		self.__ls.setcho('ans')
+		self.pt()
+
+	def cmd_m(self,mode:str):
+		if mode!=self.__mode:
+			self.__mode=mode
+			self.cmd_u()
+		self.pt()
+
+
+	def cmd_rm(self,l:int,r:int):
+		_l=self.__ls.uncho(l,r)
+		self.pt('remove '+str(_l)+' music')
+
+	def cmd_add(self,l:int,r:int):
+		_l=self.__ls.addcho('ans',l,r)
+		self.pt('append '+str(_l)+' music')
+
+	def cmd_p(self,taskkill:bool):
+		self.__pause=~self.__pause
+		if taskkill:
+			self.cmd_re()
+		self.pt('pause...' if self.__pause else 'restart')
+
+	def cmd_exit(self):
+		self.__kill()
+		sys.exit(0)
+
 
 	def join(self):
 		_s=lambda x:str(x)+(' '*(3-len(str(x))))
 		self.pt('console-music-player muz start!')
-		self.__up_l()
+		self.cmd_u()
 		self.__t=throws(self.__play)
 		self.__mian=throws(self.__always)
 		while True:
-			a=input()
-			self.lg(a,'DEBUG')
-			taskkill='+' in a
-			_a=a.strip()
-			a=_a.replace('+','').split(' ',1)+['',]
-			a2=a[1].strip()
-			a=a[0].lower()
-			a=f_command(a)
+			_x=input().strip()
+			self.__log.debug(_x)
+			taskkill='+' in _x
+			x=_splitcmd(_x)
+			self.__log.debug(str(x))
 
-			if _a=='':
+			if x[0]=='':
 				self.pt()
+			elif x[0].startswith('qwq') or x[0] in ('owo','qaq','quq','qvq','tat','0w0'):
+				self.cmd_qwq(x[0])
 
-			elif a=='qwq':
-				self.pt('QwQ')
+			elif x[0]=='pwd':
+				self.cmd_pwd()
+			elif x[0]=='w':
+				self.cmd_w()
+			elif x[0]=='clear':
+				self.cmd_clear()
 
-			elif a=='w':
-				self.pt(self.__mode+' '+str(len(self.__his)))
-			elif a=='his':
-				self.pt('history('+str(len(self.__his))+'):')
-				_rn=0
-				for i in self.__his:
-					self.pt(_s(_rn)+(' \033[34m' if i==self.__his[-1] else ' \033[33m')+i+'\033[0m')
-					_rn+=1
-			elif a=='lst':
-				_rn=0
-				self.pt('list('+str(len(self.__l))+'):')
-				for i in self.__l:
-					self.pt(_s(_rn)+(' \033[34m' if i==self.__his[-1] else ' \033[33m')+i+'\033[0m')
-					_rn+=1
-			elif a=='ll' or a=='ls' or a=='la':
-				if a=='la' or 'all' in a2:
-					self.__ls.show(fullpath='full' in a2,no=True)
-				elif a2=='dir':
-					self.__ls.showdir(fullpath='full' in a2,no=True)
-				elif a2=='file':
-					self.__ls.showfile(fullpath='full' in a2,no=True)
+			elif x[0] in ('ls','la','lst','his','ld','lf'):
+				full='full' in x[1]
+				if x[0]=='lst':
+					k='chosen'
+				elif x[0]=='his':
+					k='history'
+				elif x[0]=='lf' or 'file' in x[1]:
+					k='file'
+				elif x[0]=='ld' or 'dir' in x[1]:
+					k='dir'
+				elif x[0]=='la' or 'al' in x[1]:
+					k='all'
 				else:
-					self.__ls.showfile(fullpath='full' in a2,no=True,onlyans=True,name='music')
-				self.pt()
+					k='music'
+				self.cmd_ls(k,full)
 
-			elif a=='l':
-				self.__q=self.__his[-2:999]+self.__q
-				self.pt()
-			elif a=='re':
-				self.__q=self.__his[-1:999]+self.__q
-				self.pt()
-			elif a=='r':
-				if self.__mode=='lp':
-					self.__nwn+=1
-				self.pt()
-			elif a=='up':
-				self.__up_l()
-				self.pt()
-			elif a=='p':
-				self.__pause=~self.__pause
-				self.pt('pause...' if self.__pause else 'restart')
-			elif a=='m':
-				_a3=f_mode(a2)
-				if _a3!=self.__mode:
-					self.__mode=_a3
-					self.__up_l()
-				self.pt()
-
-			elif a=='rm':
-				a2=a2.replace(':',' ')
-				if ' ' in a2:
-					l,r=a2.split(' ')
-					l=int(l)
-					r=int(r)
-				else:
-					l=int(a2)
-					r=int(l+1)
-				_l=self.__l[l:r]
-				for i in _l.copy():
-					self.__l.remove(i)
-				self.pt('remove '+str(len(_l))+' music')
-			elif a=='add':
-				a2=a2.replace(':',' ')
-				if ' ' in a2:
-					l,r=a2.split(' ')
-					l=int(l)
-					r=int(r)
-				else:
-					l=int(a2)
-					r=int(l+1)
-				_l=[i for i in self.__ls.get_clip(l,r,'ans_full') if i not in self.__l]
-				self.__l+=_l
-				self.pt('add '+str(len(_l))+' music')
-
-			elif a=='cd':
+			elif x[0]=='cd':
 				try:
-					_a3=int(a2)
+					k=int(x[1])
 				except:
-					_a3=a2
-				self.__ls.cd(_a3)
-				self.pt()
+					k=x[1]
+				self.cmd_cd(k)
 
-			elif a=='exit':
-				# self.pt('exit!')
-				self.__kill()
-				sys.exit()
+			elif x[0]=='l':
+				self.cmd_l()
+			elif x[0]=='re':
+				self.cmd_re()
+			elif x[0]=='r':
+				self.cmd_r()
+			elif x[0]=='u':
+				self.cmd_u()
+			elif x[0]=='m':
+				self.cmd_m(f_mode(x[1]))
+
+			elif x[0] in ('rm','add'):
+				l,r=_splitlr(x[1])
+				if x[0]=='rm':
+					self.cmd_rm(l,r)
+				else:
+					self.com_add(l,r)
+
+			elif x[0]=='p':
+				self.cmd_p(taskkill=taskkill)
+			elif x[0]=='exit':
+				self.cmd_exit()
 
 			else:
-				_flg=True
-				if os.path.exists(_a):
-					if os.path.isfile(_a):
-						_flg=False
-						self.__q.append(os.path.abspath(_a))
-				_a=os.path.join(self.__ls.get_pth(),_a)
-				if os.path.exists(_a):
-					if os.path.isfile(_a):
-						_flg=False
-						self.__q.append(os.path.abspath(_a))
+				_flg=_x
+				_x=os.path.join(self.__ls.pwd(),_x)
+				if os.path.exists(_x):
+					if os.path.isfile(_x):
+						_flg=None
+						self.__q.append(os.path.abspath(_x))
 				if _flg:
-					self.pt('MuzCommandNotFound: '+a)
+					_x=_flg
+					if os.path.exists(_x):
+						if os.path.isfile(_x):
+							_flg=None
+							self.__q.append(os.path.abspath(_x))
+				if _flg:
+					self.pt('MuzCommandNotFound: '+x[0])
 				else:
 					self.pt('append 1 music')
 
 			if taskkill:
 				self.__kill()
 
+
 nMuz().join()
+
