@@ -1,0 +1,35 @@
+Metadata-Version: 1.2
+Name: muz
+Version: 0.0.3
+Summary: A console music player.
+Home-page: https://github.com/userElaina
+Author: userElaina
+Author-email: userElaina@google.com
+License: UNKNOWN
+Project-URL: Source, hhttps://github.com/userElaina/console-music-player
+Description: userelaina - Muz
+        ====================================
+        
+        .. image:: https://img.shields.io/pypi/v/muz.svg
+           :target: https://pypi.org/project/muz/
+        
+        A console music player. 
+        
+        You can use pip to install packages from the `Python Package Index`_ and other indexes.
+        
+        * `GitHub page`_
+        * `Issue tracking`_
+        
+        .. _Python Package Index: https://pypi.org
+        .. _GitHub page: https://github.com/userElaina/console-music-player
+        .. _Issue tracking: https://github.com/userElaina/console-music-player/issues
+        
+Keywords: userelaina
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.6
