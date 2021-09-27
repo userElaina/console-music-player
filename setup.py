@@ -24,7 +24,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.9",
     ],
     project_urls={
-        "Source": "hhttps://github.com/userElaina/console-music-player",
+        "Source": "https://github.com/userElaina/console-music-player",
     },
     keywords='userelaina',
     python_requires='>=3.6',
