@@ -1,7 +1,7 @@
 # console-music-player
 
-播放器为 [ffplay](https://ffmpeg.org/) .
-如果你没有安装它，可以从[这里](https://github.com/BtbN/FFmpeg-Builds/releases)下载。
+播放器为 [ffplay](https://ffmpeg.org/).
+如果你没有安装它,可以从[这里](https://github.com/BtbN/FFmpeg-Builds/releases)下载(二进制文件).
 
 ## Help
 
@@ -192,7 +192,7 @@ Embedded `help` documents
 
 ## Won't Do
 
-联网搜索音乐功能
+联网搜索音乐
 
 对本地音乐文件的非只读操作
 
