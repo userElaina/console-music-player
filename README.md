@@ -1,8 +1,8 @@
 # console-music-player
 
-播放器为 [ffplay](https://ffmpeg.org/) 。
+播放器为 [ffplay](https://ffmpeg.org/) .
 
-如果你没有安装它，可以从[这里](https://github.com/BtbN/FFmpeg-Builds/releases)下载可执行文件。
+如果你没有安装它，可以从[这里](https://github.com/BtbN/FFmpeg-Builds/releases)下载。
 
 ## Help
 
@@ -185,10 +185,16 @@ Embedded `help` documents
 
 调整指令代码顺序
 
-显示歌词
+显示歌名,时间
+
+显示歌词及其指定语言翻译 (depend on **Google Translate**)
+
+显示字符画:声音波形
 
 ## Won't Do
 
-联网功能
+联网搜索音乐功能
 
 对本地音乐文件的非只读操作
+
+GUI
