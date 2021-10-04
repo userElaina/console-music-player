@@ -7,7 +7,7 @@
 
 ## Version
 
-0.0.4
+`0.0.4`
 
 ## Help
 
@@ -17,7 +17,7 @@
 
 `h` `help`
 
-打印帮助文档.
+Show help.
  
 #### cd
 
@@ -39,12 +39,12 @@
 
 `w` `i` `info` `who` `whoami`
 
-打印当前状态.
+Show status.
 
 ```py
-str(播放模式),int(总共播放了几首),str(当前播放状态)
-str(当前播放的音乐文件名称)
-str(当前播放进度时间比),str(当前播放进度百分比)
+str(play_mode),int(total_number_played),str(player_status)
+str(name_of_the_music_file_currently_playing)
+str(play_time),str(playback_progress_percentage)
 str(music_format),str(bit_rate),str(size),str(probe_score)
 ```
 
@@ -191,7 +191,7 @@ Only for developers.
 
 `p` `pause`
 
-Pause or Restart.
+Pause or restart.
 
 #### m
 
@@ -217,6 +217,8 @@ Pack (Virtual Machines).
 
 Linux version.
 
+Switches whether to display information in real time and dynamically.
+
 ## Won't Do
 
 联网搜索音乐.
@@ -224,5 +226,3 @@ Linux version.
 对本地音乐文件的非只读操作.
 
 GUI.
-
-实时动态显示信息.
