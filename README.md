@@ -5,9 +5,19 @@ If you don't have it installed, you can download it from [here (binary file)](ht
 
 [Chinese (中文)](README_zh.md)
 
+## Version
+
+`0.0.4`
+
 ## Help
 
 ### Basic Commands
+
+#### help
+
+`h` `help`
+
+Show help.
 
 #### cd
 
@@ -17,23 +27,25 @@ Change the current path to *path*.
 
 *path* can be a relative path or an absolute path, or even a number.
 
-When it's a number, it means that the last command that output the file list is the path folder of the last output file list command.
+When it's a number, it means that the last command that show the file list is the path folder of the last show file list command.
 
 #### pwd
 
 `pwd`
 
-Output current path.
+Show current path.
 
-#### `w`
+#### w
 
 `w` `i` `info`
 
-Output current status.
+Show status.
 
-```c
-str(Play mode) int(Total number of songs played) str(Current playing status)
-str(Name of the music file currently playing)
+```py
+str(play_mode),int(total_number_played),str(player_status)
+str(name_of_the_music_file_currently_playing)
+str(play_time),str(playback_progress_percentage)
+str(music_format),str(bit_rate),str(size),str(probe_score)
 ```
 
 #### clear
@@ -48,6 +60,16 @@ Clear **console**.
 
 Exit.
 
+#### exec
+
+`exec` `eval`
+
+`exec %s` *code*
+
+Run *code*.
+
+Only for developers.
+
 ### The Command to Export a List of Files
 
 The default highlight colour for music files is yellow, 
@@ -57,42 +79,42 @@ and the default highlight colour for currently playing music files is cyan.
 
 `his` `history`
 
-Outputs the played music files, 
+Show the played music files, 
 with the currently playing music file highlighted.
 
 #### lst
 
 `lst` `list`
 
-Outputs a list of the current music files, 
+Show a list of the current music files, 
 with the currently playing music file highlighted.
 
 #### la
 
 `la` `ls all` `ll all`
 
-Outputs all files and directories in the current path, 
+Show all files and directories in the current path, 
 with music files highlighted.
 
 #### lf
 
 `lf` `ls file` `ll file`
 
-Outputs all files in the current path, 
+Show all files in the current path, 
 with music files highlighted.
 
 #### ld
 
 `ld` `ls dir` `ll dir`
 
-Outputs all directories in the current path, 
+Show all directories in the current path, 
 with music files highlighted.
 
 #### ls
 
 `ls` `ll` 
 
-Output all music files in the current path, 
+Show all music files in the current path, 
 with the currently playing music file highlighted.
 
 ### Commands to Modify the Playlist
@@ -141,13 +163,13 @@ you can see **Python** syntax for meaning.
 
 `add %d` *n*
 
-Adds the *n*th file to the playlist from the list of files 
-(output from the previous output file list command).
+Add the *n*th file to the playlist from the list of files 
+(show from the previous show file list command).
 
 `add %d:%d` *l*,*r*
 
-Adds the [l:r] files to the playlist from the list of files 
-(output from the previous output file list command).
+Add the [l:r] files to the playlist from the list of files 
+(show from the previous show file list command).
 
 *l* and *r* can be defaulted, 
 you can see **Python** syntax for meaning.
@@ -156,7 +178,7 @@ you can see **Python** syntax for meaning.
 
 `u` `up` `update`
 
-Deletes the old playlist and updates the playlist to all music files in the current path.
+Delete the old playlist and updates the playlist to all music files in the current path.
 
 ### The Command to Modify the Playback Status
 
@@ -164,7 +186,7 @@ Deletes the old playlist and updates the playlist to all music files in the curr
 
 `p` `pause`
 
-Pause or Restart.
+Pause or restart.
 
 #### m
 
@@ -172,31 +194,25 @@ Pause or Restart.
 
 `m %s` *mode*
 
-Toggles the playback mode to *mode*.
+Change the playback mode to *mode*.
 
 ### Others
 
 When adding the character `+` to any command, (if it is playing,) it will end the current playback at the end of the command.
 
+When the command entered is the path of a file, it will immediately stop playing the file being played and play the corresponding file entered instead.
+
+When the command entered is a number, playback will be stopped immediately and the music corresponding to the number entered in the playlist will be played instead.
+
 ## To Do
 
 Embedded `help` documents.
 
-`pause` in one music (depend on **ffprobe**).
+Pack (Virtual Machines).
 
-`explorer`.
+Linux version.
 
-Pack: normal, less dependent, into **ffplay**.
-
-Add command aliases.
-
-Reordering of command codes.
-
-Show song titles and progress.
-
-Show lyrics and their translation (depend on **Google Translate**).
-
-Show character pictures: sound waveforms.
+Switches whether to display information in real time and dynamically.
 
 ## Won't Do
 
