@@ -76,6 +76,8 @@ Run *code*.
 
 Only for developers.
 
+This is the only command that causes an error that makes the program exit abnormally, I think.
+
 ### 打印文件列表的命令
 
 音乐文件默认高亮色为黄色,当前播放音乐文件默认高亮色为青色.
@@ -127,11 +129,6 @@ Only for developers.
 其中,当前正在播放音乐文件高亮.
 
 ### 修改播放队列的命令
-
-以三种形式播放:
-顺序播放 `cycle`;
-单曲循环 `loop`;
-随机播放 `random`.
 
 #### l
 
@@ -200,6 +197,11 @@ Pause or restart.
 `m %s` *mode*
 
 切换播放模式为 *mode*.
+
+可以以三种形式播放:
+顺序播放 `cycle`;
+单曲循环 `loop`;
+随机播放 `random`.
 
 ### 其它
 
