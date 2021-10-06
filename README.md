@@ -68,7 +68,9 @@ Exit.
 
 Run *code*.
 
-Only for developers.
+For developer debugging only.
+
+This is the only command that causes an error that makes the program exit abnormally, I think.
 
 ### The Command to Export a List of Files
 
@@ -118,11 +120,6 @@ Show all music files in the current path,
 with the currently playing music file highlighted.
 
 ### Commands to Modify the Playlist
-
-Play in these three forms: 
-sequential play `cycle`, 
-single song loop `loop`, 
-random play `random`.
 
 #### l
 
@@ -195,6 +192,11 @@ Pause or restart.
 `m %s` *mode*
 
 Change the playback mode to *mode*.
+
+It can play in these three forms: 
+sequential play `cycle`, 
+single song loop `loop`, 
+random play `random`.
 
 ### Others
 
