@@ -74,7 +74,7 @@ Exit.
 
 Run *code*.
 
-Only for developers.
+For developer debugging only.
 
 This is the only command that causes an error that makes the program exit abnormally, I think.
 
