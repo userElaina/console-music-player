@@ -9,6 +9,8 @@ If you don't have it installed, you can download it from [here (binary file)](ht
 
 `0.0.4`
 
+Early access version, initially tested to work, but no guarantee of compatibility with subsequent updates.
+
 ## Help
 
 ### Basic Commands

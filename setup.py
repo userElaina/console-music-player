@@ -5,13 +5,12 @@ r=lambda x:open(os.path.join(os.path.abspath(os.path.dirname(__file__)),x),'rb')
 
 setuptools.setup(
     name='muz',
-    version='0.0.3',
+    version='0.0.4',
     description='A console music player.',
     long_description=r('README.rst'),
     py_modules=['muz'],
     packages=setuptools.find_packages(),
     install_requires=r('requirements.txt').split('\n'),
-
 
     author='userElaina',
     author_email='userElaina@google.com',
