@@ -13,8 +13,9 @@ _white='\x1b[0m'
 
 error_codes={
 	403:'Forbidden',
-	405:'Method Not Allowed',
-	415:'Unsupported Media Type',
+	404:'Not_Found',
+	405:'Method_Not_Allowed',
+	415:'Unsupported_Media_Type',
 }
 # https://http.cat/
 
@@ -110,7 +111,6 @@ def _splitlr(x:str)->tuple:
 
 _max=1<<10
 _badpth='\\/:*?"<>|'
-# DEBUG INFO WARNING ERROR CRITICAL
 
 show_name={
 	'history':'Music Playback History',
@@ -138,6 +138,7 @@ class Muz:
 		handler_lg.setLevel(logging.DEBUG)
 		handler_lg.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
 		self.__log.addHandler(handler_lg)
+		# DEBUG INFO WARNING ERROR CRITICAL
 
 		self.__ls=Ls()
 		self.__ls.setcolor('muz',color_muz)
@@ -280,7 +281,7 @@ class Muz:
 
 	def cmd_cd(self,s:str):
 		if self.__ls.cd(s):
-			self.pt('ParametersError: The system cannot find the path "'+str(s)+'" specified.')
+			self.er('The system cannot find the path "'+str(s)+'" specified.',404)
 		else:
 			self.pt()
 
