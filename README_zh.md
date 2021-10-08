@@ -31,7 +31,7 @@ Show help.
 
 `w` `i` `info` `who` `whoami`
 
-Show status.
+Show information.
 
 ```py
 str(play_mode),int(total_number_played),str(player_status)
@@ -101,11 +101,8 @@ This is the only command that causes an error that makes the program exit abnorm
 ### 改变播放状态的命令
 
 有三种播放状态:
-
 **playing**,
-
 **paused**,
-
 **stopped**.
 
 #### p
@@ -244,9 +241,9 @@ Restart.
 
 ### 其它
 
-当命令一个文件的路径,下一首将会播放输入对应的文件.
+当命令是一个文件的路径,下一首将会播放输入对应的文件.
 
-当命令一个数字,下一首将会播放输入的数字在播放列表中对应位置的音乐.
+当命令是一个数字,下一首将会播放输入的数字在播放列表中对应位置的音乐.
 
 当命令中含有字符 `+` 时,(若正在播放,)将会在命令执行结束时结束当前的播放,并删除存在的断点.
 
