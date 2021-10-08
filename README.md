@@ -17,19 +17,9 @@ Early access version, initially tested to work, but no guarantee of compatibilit
 
 #### help
 
-`h` `help`
+`h` `help` `?`
 
 Show help.
-
-#### cd
-
-`cd %s` *path*
-
-Change the current path to *path*.
-
-*path* can be a relative path or an absolute path, or even a number.
-
-When it's a number, it means that the last command that show the file list is the path folder of the last show file list command.
 
 #### pwd
 
@@ -50,11 +40,37 @@ str(play_time),str(playback_progress_percentage)
 str(music_format),str(bit_rate),str(size),str(probe_score)
 ```
 
+#### cd
+
+`cd %s` *path*
+
+Change the current path to *path*.
+
+*path* can be a relative path or an absolute path, or even a number.
+
+When it's a number, it means that the last command that show the file list is the path folder of the last show file list command.
+
 #### clear
 
 `clear` `cls`
 
 Clear **console**.
+
+#### m
+
+`m` `mode`
+
+`m %s` *mode*
+
+Change the playback mode to *mode*.
+
+It can play in these three forms: 
+
+sequential play `cycle`,
+
+single song loop `loop`,
+
+random play `random`.
 
 #### exit
 
@@ -73,6 +89,37 @@ Run *code*.
 For developer debugging only.
 
 This is the only command that causes an error that makes the program exit abnormally, I think.
+
+### The Command to Modify the Playback Status
+
+There are three playback states:
+**playing**,
+**paused**,
+**stopped**.
+
+#### p
+
+`p` `pause`
+
+Pause or restart.
+
+#### stop
+
+`stop`
+
+Stop (not exit).
+
+The command is equivalent to `p+` if is **playing**; 
+
+the command is equivalent to `+` if is **paused**.
+
+#### restart
+
+`restart` `start`
+
+Restart.
+
+The command is equivalent to ` ` if is **playing**.
 
 ### The Command to Export a List of Files
 
@@ -141,6 +188,12 @@ Play again at the end of the current play.
 
 Play the next song at the end of the current playback.
 
+#### rd
+
+`rd` `random`
+
+Play a random song at the end of the current playback.
+
 #### rm
 
 `rm` `remove` `del` `delete`
@@ -170,7 +223,7 @@ Add the *n*th file to the playlist from the list of files
 Add the [l:r] files to the playlist from the list of files 
 (show from the previous show file list command).
 
-*l* and *r* can be defaulted, 
+*l* and *r* can be ` `, 
 you can see **Python** syntax for meaning.
 
 #### u
@@ -179,34 +232,13 @@ you can see **Python** syntax for meaning.
 
 Delete the old playlist and updates the playlist to all music files in the current path.
 
-### The Command to Modify the Playback Status
-
-#### p
-
-`p` `pause`
-
-Pause or restart.
-
-#### m
-
-`m` `mode`
-
-`m %s` *mode*
-
-Change the playback mode to *mode*.
-
-It can play in these three forms: 
-sequential play `cycle`, 
-single song loop `loop`, 
-random play `random`.
-
 ### Others
 
-When adding the character `+` to any command, (if it is playing,) it will end the current playback at the end of the command.
+When the command is the path of a file, the next song will play the corresponding file.
 
-When the command entered is the path of a file, it will immediately stop playing the file being played and play the corresponding file entered instead.
+When the command is a number, the next song will play the music corresponding to the number in the playlist.
 
-When the command entered is a number, playback will be stopped immediately and the music corresponding to the number entered in the playlist will be played instead.
+When the command contains the character `+`, (if it is **playing**,) it will end the current playback at the end of the command execution and delete the existing breakpoint.
 
 ## To Do
 
