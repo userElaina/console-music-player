@@ -1,7 +1,15 @@
 '''
 `Muz`
 
-	>>> Muz(mode='rd',color_muz='y',color_highlight='c',color_pwd='g',log='muz.log')
+	>>> Muz(
+			mode='random',
+			color_muz='yellow',
+			color_highlight='cyan',
+			color_pwd='green',
+			color_err='red',
+			log='muz.log',
+			clk=0.1,
+		)->Muz
 '''
 
 from muz._muz import Muz
