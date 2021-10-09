@@ -72,9 +72,15 @@ single song loop `loop`,
 
 random play `random`.
 
+#### reboot
+
+`reboot`
+
+Reboot.
+
 #### exit
 
-`exit`
+`exit` `quit` `halt` `poweroff`
 
 Exit.
 
