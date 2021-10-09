@@ -80,9 +80,15 @@ For windows only.
 
 随机播放 `random`.
 
+#### reboot
+
+`reboot`
+
+Reboot.
+
 #### exit
 
-`exit` `quit`
+`exit` `quit` `halt` `poweroff`
 
 Exit.
 
