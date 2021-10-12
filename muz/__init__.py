@@ -2,13 +2,14 @@
 `Muz`
 
 	>>> Muz(
-			mode='random',
-			color_muz='yellow',
-			color_highlight='cyan',
-			color_pwd='green',
-			color_err='red',
-			log='muz.log',
-			clk=0.1,
+			pth:str='./',
+			mode:str='random',
+			color_muz:str='yellow',
+			color_now:str='cyan',
+			color_pwd:str='green',
+			color_err:str='red',
+			log:str='muz.log',
+			clk:float=0.1,
 		)->Muz
 '''
 

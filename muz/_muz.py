@@ -8,7 +8,7 @@ import logging
 import subprocess
 
 from userelaina.th import throws
-from userelaina.pthc import Ls,Archive,col2str
+from userelaina.pthc import Ls,Archive,col2str,fastlog
 
 _debug=True
 _white='\x1b[0m'
@@ -146,13 +146,7 @@ class Muz:
 		log:str='muz.log',
 		clk:float=0.1,
 	):
-		Archive().new(log)
-		self.__log=logging.getLogger('muz')
-		self.__log.setLevel(logging.DEBUG)
-		handler_lg=logging.FileHandler(filename=log,encoding='utf8')
-		handler_lg.setLevel(logging.DEBUG)
-		handler_lg.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
-		self.__log.addHandler(handler_lg)
+		self.__log=fastlog('muz','quiet',log)
 		# DEBUG INFO WARNING ERROR CRITICAL
 
 		self.__ls=Ls(pth)
