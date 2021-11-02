@@ -1,7 +1,7 @@
 import os
 import setuptools
 
-r=lambda x:open(os.path.join(os.path.abspath(os.path.dirname(__file__)),x),'rb').read().decode('utf-8')
+r=lambda x:open(os.path.join(os.path.abspath(os.path.dirname(__file__)),x),'r').read()
 
 setuptools.setup(
     name='muz',
