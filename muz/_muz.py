@@ -12,6 +12,9 @@ from userelaina.pthc import Ls,Archive,col2str,fastlog
 
 _debug=True
 _white='\x1b[0m'
+_ws=lambda s:max(0,os.get_terminal_size().columns-sum([1 if ord(i)<128 else 2 for i in s]))
+_max=1<<10
+_badpth='\\/:*?"<>|'
 
 error_codes={
     403:'Forbidden',
@@ -123,9 +126,6 @@ def _splitlr(x:str)->tuple:
         r=l+1
     return (l,r)
 
-_max=1<<10
-_badpth='\\/:*?"<>|'
-
 show_name={
     'history':'Music Playback History',
     'chosen':'Music Playlist',
@@ -159,20 +159,20 @@ class Muz:
         self.__mode=f_mode(mode)
         self.__clk=clk
 
-        self.__mian=None # play subprocess (of __always_play)
-        self.__sub=None # ffplay subprocess (of __t)
-    
+        self.__mian=None    # play subprocess (of __always_play)
+        self.__sub=None     # ffplay subprocess (of __t)
+
     def lg(self,s:all):
         s=repr(s)
         self.__log.debug(s)
 
     def pt(self,s:str=None):
-        res='None...'
+        s_text='None...'
         if s:
             s=str(s)
-            res=re.sub('\x1b\[[0-9]+m','',s)
-            print('\r'+s+' '*(len(self.__ls.pwd())+2-len(res)))
-        self.__log.info(res)
+            s_text=re.sub('\x1b\[[0-9]+m','',s)
+            print('\r'+s+' '*_ws(s_text))
+        self.__log.info(s_text)
         print('\r'+self.__col_pwd+self.__ls.pwd()+'#'+_white+' ',end='')
 
     def sh(self,s:str)->str:
@@ -190,10 +190,9 @@ class Muz:
 
     def er(self,s:str,code:int)->str:
         s=str(s)
-        _s=error_codes[code]+': '+s
-        _ws=' '*(len(self.__ls.pwd())+2-len(_s))
-        print('\r'+self.__col_err+error_codes[code]+_white+': '+s+_ws)
-        self.__log.error(s)
+        s_text=error_codes[code]+': '+s
+        print('\r'+self.__col_err+error_codes[code]+_white+': '+s+' '*_ws(s_text))
+        self.__log.error(s_text)
         print('\r'+self.__col_pwd+self.__ls.pwd()+'#'+_white+' ',end='')
 
     def rd(self)->int:
@@ -375,7 +374,7 @@ class Muz:
         self.pt('Get the source  https://github.com/userElaina/console-music-player')
         self.pt(' ')
         if self.__ls.setcho('ans'):
-            self.pt(self.__start_str)
+            # self.pt(self.__start_str)
             self.__start_str='Restart!'
         self.__state=0
 
@@ -451,6 +450,8 @@ class Muz:
     def cmd_jmp_int(self,x:int)->str:
         try:
             x=int(x)
+            if abs(x)>self.__ls.lencho():
+                raise ValueError
             return x%self.__ls.lencho()
         except:
             return None
@@ -469,6 +470,7 @@ class Muz:
         pth=self.cmd_jmp_int(command)
         if pth is not None:
             self.__nx=pth
+            self.pt('Next: '+self.__col_muz+os.path.basename(self.__ls.getcho(self.__nx%self.__ls.lencho()))+_white)
             return 1
         pth=self.cmd_jmp_str(command)
         if pth is None:
@@ -477,6 +479,7 @@ class Muz:
         _l=self.__ls.addcho([pth,])
         self.__nx%=self.__ls.lencho()
         self.pt('Appended '+str(_l)+' music.')
+        self.pt('Next: '+self.__col_muz+os.path.basename(self.__ls.getcho(self.__nx%self.__ls.lencho()))+_white)
         return 1
 
 

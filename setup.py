@@ -5,7 +5,7 @@ r=lambda x:open(os.path.join(os.path.abspath(os.path.dirname(__file__)),x),'r').
 
 setuptools.setup(
     name='muz',
-    version='0.0.4',
+    version='0.0.5',
     description='A console music player.',
     long_description=r('README.rst'),
     py_modules=['muz'],

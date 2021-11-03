@@ -12,4 +12,4 @@ if len(sys.argv)>1:
 
 muz.Muz(pth,'cycle',log=os.path.join(os.path.dirname(__file__),'muz.log')).join()
 
-# python test.py ../_music
+# python test.py /all/sakura/music/
